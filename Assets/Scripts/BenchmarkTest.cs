@@ -6,22 +6,27 @@ using TMPro;
 
 public class BenchmarkTest : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] GameObject camera; // List of waypoints for the camera to follow
-    [SerializeField] List<Transform> cameraPath; // List of waypoints for the camera to follow
-    [SerializeField] float moveSpeed = 5f;       // Speed at which the camera moves
-    [SerializeField] TextMeshProUGUI currentFpsText;        // UI Text element for displaying the current FPS
-    [SerializeField] TextMeshProUGUI ramUsageText;          // UI Text element for displaying the RAM usage
-    [SerializeField] TextMeshProUGUI vramUsageText;         // UI Text element for displaying the VRAM usage
-    [SerializeField] TextMeshProUGUI benchmarkResultText;   // UI Text element to display results after the test
+    [Header("Camera References")]
+    [SerializeField] GameObject camera;
+    //List Of Transform Waypoints For The Camera To Follow
+    [SerializeField] List<Transform> cameraPath;
+    //Camera Move Speed
+    [SerializeField] float moveSpeed = 5f;
+
+    [Header("Text References")]
+    [SerializeField] TextMeshProUGUI currentFpsText;
+    [SerializeField] TextMeshProUGUI ramUsageText;  
+    [SerializeField] TextMeshProUGUI vramUsageText;
+    [SerializeField] TextMeshProUGUI benchmarkResultText;
 
     [Header("Static Benchmark")]
-    [SerializeField] bool isStaticTest = false;  // If true, perform a static test (no camera movement)
-    [SerializeField] float staticTestDuration = 30f; // Duration of the static test in seconds
+    [SerializeField] bool isStaticTest = false;
+    [SerializeField] float staticTestDuration = 30f;
 
     [Header("Benchmark Variables")]
-    int currentWaypointIndex = 0; // Index of the current transform the camera is moving to
-    List<float> fpsList = new List<float>(); // List to track FPS throughout the test
+    int currentWaypointIndex = 0;
+    //List Of All FPS Throughout To Get Min/ Max/ Avg
+    List<float> fpsList = new List<float>();
     float minFps = float.MaxValue;
     float maxFps = 0f;
     float totalFps = 0f;
@@ -30,9 +35,10 @@ public class BenchmarkTest : MonoBehaviour
 
     void Start()
     {
+        //Check That Waypoints Are Set
         if (!isStaticTest && (cameraPath == null || cameraPath.Count == 0))
         {
-            UnityEngine.Debug.LogError("Camera path is not set or empty for test!");
+            UnityEngine.Debug.LogError("Camera Path Is Not Referenced Or Is Empty!");
             enabled = false;
             return;
         }
@@ -42,23 +48,22 @@ public class BenchmarkTest : MonoBehaviour
 
         if (isStaticTest)
         {
-            // For a static test, start a coroutine to end after the specified duration
             StartCoroutine(StaticTestTimer());
         }
     }
 
     void Update()
     {
-        if (!testRunning) return; // If the test has ended, stop updating
+        if (!testRunning) return;
 
         if (isStaticTest)
         {
-            // For static test, only track performance without moving the camera
+            //If Static Only Track Performance Without Moving The Camera
             TrackPerformance();
         }
         else
         {
-            // Move the camera along the list of transforms
+            //Move The Camera Along The List Of Transforms
             if (currentWaypointIndex < cameraPath.Count)
             {
                 MoveCamera();
@@ -74,9 +79,10 @@ public class BenchmarkTest : MonoBehaviour
     void MoveCamera()
     {
         Transform target = cameraPath[currentWaypointIndex];
-        float step = moveSpeed * Time.deltaTime;
-        camera.transform.position = Vector3.MoveTowards(camera.transform.position, target.position, step);
+        float maxDistance = moveSpeed * Time.deltaTime;
+        camera.transform.position = Vector3.MoveTowards(camera.transform.position, target.position, maxDistance);
 
+        //If The Camera Is Within Set Distance To Next Waypoint - Transition To The Next
         if (Vector3.Distance(camera.transform.position, target.position) < 0.1f)
         {
             currentWaypointIndex++;
@@ -93,11 +99,11 @@ public class BenchmarkTest : MonoBehaviour
         maxFps = Mathf.Max(maxFps, currentFps);
         currentFpsText.text = $"Current FPS: {currentFps:F2}";
 
-        //Track RAM Usage
-        long ramUsage = System.GC.GetTotalMemory(false) / (1024 * 1024); // Convert bytes to MB
+        //Track RAM Usage - Convert Bytes To MB - GB
+        long ramUsage = System.GC.GetTotalMemory(false) / (1024 * 1024);
         ramUsageText.text = $"RAM: {ramUsage} MB";
 
-        // Track VRAM usage (placeholder for now)
+        //Track VRAM Usage TODO: IMNPLEMENT THIS
         vramUsageText.text = "VRAM: 512 MB (Placeholder)";
     }
 
