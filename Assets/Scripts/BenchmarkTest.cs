@@ -27,13 +27,13 @@ public class BenchmarkTest : MonoBehaviour
 
     [Header("Benchmark Variables")]
     [SerializeField] GameObject benchmarkResultScreen;
+    Stopwatch benchmarkTimer;
     int currentWaypointIndex = 0;
     //List Of All FPS Throughout To Get Min/ Max/ Avg
     List<float> fpsList = new List<float>();
     float minFps = float.MaxValue;
     float maxFps = 0f;
     float totalFps = 0f;
-    Stopwatch benchmarkTimer;
     bool testRunning = true;
 
     void Start()
