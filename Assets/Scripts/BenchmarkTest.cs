@@ -7,6 +7,7 @@ using TMPro;
 public class BenchmarkTest : MonoBehaviour
 {
     [Header("References")]
+    [SerializeField] GameObject camera; // List of waypoints for the camera to follow
     [SerializeField] List<Transform> cameraPath; // List of waypoints for the camera to follow
     [SerializeField] float moveSpeed = 5f;       // Speed at which the camera moves
     [SerializeField] TextMeshProUGUI currentFpsText;        // UI Text element for displaying the current FPS
@@ -74,9 +75,9 @@ public class BenchmarkTest : MonoBehaviour
     {
         Transform target = cameraPath[currentWaypointIndex];
         float step = moveSpeed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, target.position, step);
+        camera.transform.position = Vector3.MoveTowards(camera.transform.position, target.position, step);
 
-        if (Vector3.Distance(transform.position, target.position) < 0.1f)
+        if (Vector3.Distance(camera.transform.position, target.position) < 0.1f)
         {
             currentWaypointIndex++;
         }

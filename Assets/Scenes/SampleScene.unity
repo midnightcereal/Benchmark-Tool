@@ -587,6 +587,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20be73f72d5a23b468ec96b3f47446a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 963194225}
   cameraPath:
   - {fileID: 1890976493}
   - {fileID: 1096962279}
