@@ -127,7 +127,7 @@ public class BenchmarkTest : MonoBehaviour
         totalFps += currentFps;
         minFps = Mathf.Min(minFps, currentFps);
         maxFps = Mathf.Max(maxFps, currentFps);
-        currentFpsText.text = $"Current FPS: {currentFps:F2}";
+        currentFpsText.text = $"Current FPS: {currentFps:F0}";
 
         //Track RAM Usage
         //totalMemory Retrieves The Total Allocated Memory By Unity
