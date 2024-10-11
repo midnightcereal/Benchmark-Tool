@@ -36,18 +36,37 @@ public class BenchmarkTest : MonoBehaviour
 
     void Start()
     {
-        //Disable Result Screen
-        if(benchmarkResultScreen != null)
+        StartBenchmark();
+    }
+
+    void StartBenchmark()
+    {
+        //Disable Results Screen
+        if (benchmarkResultScreen != null)
         {
             benchmarkResultScreen.SetActive(false);
         }
 
-        //Check That Waypoints Are Set
         if (!isStaticTest && (cameraPath == null || cameraPath.Count == 0))
         {
-            UnityEngine.Debug.LogError("Camera Path Is Not Referenced Or Is Empty!");
+            UnityEngine.Debug.LogError("Camera Path Is Not Set Or Is Empty!");
             enabled = false;
             return;
+        }
+
+        //Reset Benchmark Variables
+        currentWaypointIndex = 0;
+        camera.transform.position = cameraPath[0].position;
+        fpsList.Clear();
+        minFps = float.MaxValue;
+        maxFps = 0f;
+        totalFps = 0f;
+        testRunning = true;
+
+        //Reset Camera Position If Not A Static Test
+        if (!isStaticTest && cameraPath.Count > 0)
+        {
+            transform.position = cameraPath[0].position;
         }
 
         benchmarkTimer = new Stopwatch();
@@ -106,7 +125,7 @@ public class BenchmarkTest : MonoBehaviour
         maxFps = Mathf.Max(maxFps, currentFps);
         currentFpsText.text = $"Current FPS: {currentFps:F2}";
 
-        //Track RAM Usage - Convert Bytes To GB
+        //Track RAM Usage - / (1024 * 1024 * 1024) Converts Bytes To GB 
         //DONT CHANGE TO TRUE -> Set To False So That Garbage Collection Doesn't Clean It Up Prior To Retrieving Memory Result
         double ramUsage = (double)System.GC.GetTotalMemory(false) / (1024 * 1024 * 1024);
         ramUsageText.text = $"RAM: {ramUsage:F2} GB";
@@ -137,7 +156,11 @@ public class BenchmarkTest : MonoBehaviour
                                    $"Max FPS: {maxFps:F2}\n" +
                                    $"Average FPS: {avgFps:F2}\n" +
                                    $"Duration: {benchmarkTimer.Elapsed.TotalSeconds:F2} seconds";
+    }
 
-        enabled = false;
+    public void RestartBenchmark()
+    {
+        StopAllCoroutines(); 
+        StartBenchmark();
     }
 }
