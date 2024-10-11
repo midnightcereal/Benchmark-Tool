@@ -18,7 +18,7 @@ public class BenchmarkTest : MonoBehaviour
     [Header("Text References")]
     [SerializeField] TextMeshProUGUI currentFpsText;
     [SerializeField] TextMeshProUGUI ramUsageText;  
-    [SerializeField] TextMeshProUGUI vramUsageText;
+    [SerializeField] TextMeshProUGUI renderLatencyText;
     [SerializeField] TextMeshProUGUI benchmarkResultText;
 
     [Header("Static Benchmark")]
@@ -33,6 +33,9 @@ public class BenchmarkTest : MonoBehaviour
     float minFps = float.MaxValue;
     float maxFps = 0f;
     float totalFps = 0f;
+    double renderLatency;
+    double averageLatency;
+    int frameCount;
     Stopwatch benchmarkTimer;
     bool testRunning = true;
 
@@ -64,6 +67,8 @@ public class BenchmarkTest : MonoBehaviour
         minFps = float.MaxValue;
         maxFps = 0f;
         totalFps = 0f;
+        renderLatency = 0f;
+        frameCount = 0;
         testRunning = true;
 
         //Reset Camera Position If Not A Static Test
@@ -132,15 +137,21 @@ public class BenchmarkTest : MonoBehaviour
         //Track RAM Usage
         //totalMemory Retrieves The Total Allocated Memory By Unity
         long totalMemory = Profiler.GetTotalAllocatedMemoryLong();
-        double ramUsage = (double)totalMemory / (1024 * 1024 * 1024);
+        double RAMUsage = (double)totalMemory / (1024 * 1024 * 1024);
 
         //reservedMemory Calculates The Reserved RAM By Unity
         long reservedMemory = Profiler.GetTotalReservedMemoryLong();
-        double reservedRam = (double)reservedMemory / (1024 * 1024 * 1024);
-        ramUsageText.text = $"RAM: {ramUsage:F2} / " + $"{reservedRam:F2} GB";
+        double reservedRAM = (double)reservedMemory / (1024 * 1024 * 1024);
+        ramUsageText.text = $"RAM: {RAMUsage:F2} / " + $"{reservedRAM:F2} GB";
 
-        //Track VRAM Usage TODO: IMNPLEMENT THIS
-        vramUsageText.text = "VRAM: 512 MB (Placeholder)";
+        //Track Render Latency
+        //frameTime Is The Elapsed Time Since The Last In Ms
+        double frameTime = benchmarkTimer.Elapsed.TotalMilliseconds;
+        //!renderLatency IS AN APPROXIMATION!
+        renderLatency = frameTime;
+        frameCount++;
+        averageLatency = renderLatency / frameCount;
+        renderLatencyText.text = $"Render Latency: {averageLatency:F1} ms";
     }
 
     IEnumerator StaticTestTimer()
@@ -159,11 +170,12 @@ public class BenchmarkTest : MonoBehaviour
 
         benchmarkResultScreen.SetActive(true);
 
-        //Display Final Benchmark Results In The Console
-        benchmarkResultText.text = $"Benchmark Completed\n" +
-                                   $"Min FPS: {minFps:F2}\n" +
-                                   $"Max FPS: {maxFps:F2}\n" +
+        //Display Final Benchmark Results
+        benchmarkResultText.text = $"Benchmark Completed\n \n" +
                                    $"Average FPS: {avgFps:F2}\n" +
+                                   $"Min FPS: {minFps:F2}\n" +
+                                   $"Max FPS: {maxFps:F2}\n \n" +    
+                                   $"Average Render Latency: {averageLatency:F1}\n \n" +
                                    $"Duration: {benchmarkTimer.Elapsed.TotalSeconds:F2} seconds";
     }
 
