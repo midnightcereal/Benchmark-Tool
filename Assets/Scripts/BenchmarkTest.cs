@@ -10,9 +10,9 @@ public class BenchmarkTest : MonoBehaviour
     [SerializeField] GameObject camera;
     //List Of Transform Waypoints For The Camera To Follow
     [SerializeField] List<Transform> cameraPath;
-    //Camera Move Speed
+    //Camera Move Speed/ Rotation
     [SerializeField] float moveSpeed = 5f;
-    [SerializeField] float rotationSpeed = 40f;
+    [SerializeField] float rotationSmoothness = 0.01f;
 
     [Header("Text References")]
     [SerializeField] TextMeshProUGUI currentFpsText;
@@ -109,7 +109,7 @@ public class BenchmarkTest : MonoBehaviour
         Transform target = cameraPath[currentWaypointIndex];
         float maxDistance = moveSpeed * Time.deltaTime;
         camera.transform.position = Vector3.MoveTowards(camera.transform.position, target.position, maxDistance);
-        camera.transform.rotation = Quaternion.RotateTowards(camera.transform.rotation, target.rotation, rotationSpeed * Time.deltaTime);
+        camera.transform.rotation = Quaternion.Slerp(camera.transform.rotation, target.rotation, rotationSmoothness);
 
         //If The Camera Is Within Set Distance To Next Waypoint - Transition To The Next
         if (Vector3.Distance(camera.transform.position, target.position) < 0.1f)
