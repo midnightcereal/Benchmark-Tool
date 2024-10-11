@@ -2,17 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class BenchmarkTest : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] List<Transform> cameraPath; // List of waypoints for the camera to follow
     [SerializeField] float moveSpeed = 5f;       // Speed at which the camera moves
-    [SerializeField] Text currentFpsText;        // UI Text element for displaying the current FPS
-    [SerializeField] Text ramUsageText;          // UI Text element for displaying the RAM usage
-    [SerializeField] Text vramUsageText;         // UI Text element for displaying the VRAM usage
-    [SerializeField] Text benchmarkResultText;   // UI Text element to display results after the test
+    [SerializeField] TextMeshProUGUI currentFpsText;        // UI Text element for displaying the current FPS
+    [SerializeField] TextMeshProUGUI ramUsageText;          // UI Text element for displaying the RAM usage
+    [SerializeField] TextMeshProUGUI vramUsageText;         // UI Text element for displaying the VRAM usage
+    [SerializeField] TextMeshProUGUI benchmarkResultText;   // UI Text element to display results after the test
 
     [Header("Static Benchmark")]
     [SerializeField] bool isStaticTest = false;  // If true, perform a static test (no camera movement)
