@@ -134,6 +134,7 @@ public class BenchmarkTest : MonoBehaviour
         long totalMemory = Profiler.GetTotalAllocatedMemoryLong();
         double ramUsage = (double)totalMemory / (1024 * 1024 * 1024);
 
+        //reservedMemory Calculates The Reserved RAM By Unity
         long reservedMemory = Profiler.GetTotalReservedMemoryLong();
         double reservedRam = (double)reservedMemory / (1024 * 1024 * 1024);
         ramUsageText.text = $"RAM: {ramUsage:F2} / " + $"{reservedRam:F2} GB";
