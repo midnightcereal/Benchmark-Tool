@@ -24,6 +24,7 @@ public class BenchmarkTest : MonoBehaviour
     [SerializeField] float staticTestDuration = 30f;
 
     [Header("Benchmark Variables")]
+    [SerializeField] GameObject benchmarkResultScreen;
     int currentWaypointIndex = 0;
     //List Of All FPS Throughout To Get Min/ Max/ Avg
     List<float> fpsList = new List<float>();
@@ -35,6 +36,12 @@ public class BenchmarkTest : MonoBehaviour
 
     void Start()
     {
+        //Disable Result Screen
+        if(benchmarkResultScreen != null)
+        {
+            benchmarkResultScreen.SetActive(false);
+        }
+
         //Check That Waypoints Are Set
         if (!isStaticTest && (cameraPath == null || cameraPath.Count == 0))
         {
@@ -101,8 +108,8 @@ public class BenchmarkTest : MonoBehaviour
 
         //Track RAM Usage - Convert Bytes To GB
         //DONT CHANGE TO TRUE -> Set To False So That Garbage Collection Doesn't Clean It Up Prior To Retrieving Memory Result
-        long ramUsage = System.GC.GetTotalMemory(false) / (1024 * 1024 * 1024);
-        ramUsageText.text = $"RAM: {ramUsage} GB";
+        double ramUsage = (double)System.GC.GetTotalMemory(false) / (1024 * 1024 * 1024);
+        ramUsageText.text = $"RAM: {ramUsage:F2} GB";
 
         //Track VRAM Usage TODO: IMNPLEMENT THIS
         vramUsageText.text = "VRAM: 512 MB (Placeholder)";
@@ -121,6 +128,8 @@ public class BenchmarkTest : MonoBehaviour
         testRunning = false;
 
         float avgFps = totalFps / fpsList.Count;
+
+        benchmarkResultScreen.SetActive(true);
 
         //Display Final Benchmark Results In The Console
         benchmarkResultText.text = $"Benchmark Completed\n" +
