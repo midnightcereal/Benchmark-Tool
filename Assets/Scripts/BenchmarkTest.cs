@@ -12,6 +12,7 @@ public class BenchmarkTest : MonoBehaviour
     [SerializeField] List<Transform> cameraPath;
     //Camera Move Speed
     [SerializeField] float moveSpeed = 5f;
+    [SerializeField] float rotationSpeed = 40f;
 
     [Header("Text References")]
     [SerializeField] TextMeshProUGUI currentFpsText;
@@ -57,6 +58,7 @@ public class BenchmarkTest : MonoBehaviour
         //Reset Benchmark Variables
         currentWaypointIndex = 0;
         camera.transform.position = cameraPath[0].position;
+        camera.transform.rotation = cameraPath[0].rotation;
         fpsList.Clear();
         minFps = float.MaxValue;
         maxFps = 0f;
@@ -107,6 +109,7 @@ public class BenchmarkTest : MonoBehaviour
         Transform target = cameraPath[currentWaypointIndex];
         float maxDistance = moveSpeed * Time.deltaTime;
         camera.transform.position = Vector3.MoveTowards(camera.transform.position, target.position, maxDistance);
+        camera.transform.rotation = Quaternion.RotateTowards(camera.transform.rotation, target.rotation, rotationSpeed * Time.deltaTime);
 
         //If The Camera Is Within Set Distance To Next Waypoint - Transition To The Next
         if (Vector3.Distance(camera.transform.position, target.position) < 0.1f)
