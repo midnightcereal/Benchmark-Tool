@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Profiling;
 
 public class BenchmarkTest : MonoBehaviour
 {
@@ -128,10 +129,14 @@ public class BenchmarkTest : MonoBehaviour
         maxFps = Mathf.Max(maxFps, currentFps);
         currentFpsText.text = $"Current FPS: {currentFps:F2}";
 
-        //Track RAM Usage - / (1024 * 1024 * 1024) Converts Bytes To GB 
-        //DONT CHANGE TO TRUE -> Set To False So That Garbage Collection Doesn't Clean It Up Prior To Retrieving Memory Result
-        double ramUsage = (double)System.GC.GetTotalMemory(false) / (1024 * 1024 * 1024);
-        ramUsageText.text = $"RAM: {ramUsage:F2} GB";
+        //Track RAM Usage
+        //totalMemory Retrieves The Total Allocated Memory By Unity
+        long totalMemory = Profiler.GetTotalAllocatedMemoryLong();
+        double ramUsage = (double)totalMemory / (1024 * 1024 * 1024);
+
+        long reservedMemory = Profiler.GetTotalReservedMemoryLong();
+        double reservedRam = (double)reservedMemory / (1024 * 1024 * 1024);
+        ramUsageText.text = $"RAM: {ramUsage:F2} / " + $"{reservedRam:F2} GB";
 
         //Track VRAM Usage TODO: IMNPLEMENT THIS
         vramUsageText.text = "VRAM: 512 MB (Placeholder)";
