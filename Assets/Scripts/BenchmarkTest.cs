@@ -99,9 +99,10 @@ public class BenchmarkTest : MonoBehaviour
         maxFps = Mathf.Max(maxFps, currentFps);
         currentFpsText.text = $"Current FPS: {currentFps:F2}";
 
-        //Track RAM Usage - Convert Bytes To MB - GB
-        long ramUsage = System.GC.GetTotalMemory(false) / (1024 * 1024);
-        ramUsageText.text = $"RAM: {ramUsage} MB";
+        //Track RAM Usage - Convert Bytes To GB
+        //DONT CHANGE TO TRUE -> Set To False So That Garbage Collection Doesn't Clean It Up Prior To Retrieving Memory Result
+        long ramUsage = System.GC.GetTotalMemory(false) / (1024 * 1024 * 1024);
+        ramUsageText.text = $"RAM: {ramUsage} GB";
 
         //Track VRAM Usage TODO: IMNPLEMENT THIS
         vramUsageText.text = "VRAM: 512 MB (Placeholder)";
