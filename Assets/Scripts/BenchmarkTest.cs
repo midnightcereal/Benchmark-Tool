@@ -18,7 +18,6 @@ public class BenchmarkTest : MonoBehaviour
     [Header("Text References")]
     [SerializeField] TextMeshProUGUI currentFpsText;
     [SerializeField] TextMeshProUGUI ramUsageText;  
-    [SerializeField] TextMeshProUGUI renderLatencyText;
     [SerializeField] TextMeshProUGUI benchmarkResultText;
 
     [Header("Static Benchmark")]
